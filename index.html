@@ -523,8 +523,13 @@ body.modal{overflow:hidden}
 }
 *{-webkit-tap-highlight-color:transparent;scrollbar-width:none;-ms-overflow-style:none}
 *::-webkit-scrollbar{display:none;width:0;height:0}
-.scrollbox{max-height:min(62vh,560px);overflow:auto;overscroll-behavior:contain;border-radius:16px;cursor:grab}
-.tblscroll{max-height:min(66vh,620px);overflow:auto;overscroll-behavior:contain;border:1px solid var(--line);border-radius:18px;background:var(--pill);cursor:grab}
+.scrollbox{max-height:min(62vh,560px);overflow:auto;border-radius:16px;cursor:grab}
+.tblscroll{max-height:min(66vh,620px);overflow:auto;border:1px solid var(--line);border-radius:18px;background:var(--pill);cursor:grab}
+@media (pointer:coarse){
+  .scrollbox{max-height:none!important;overflow:visible;cursor:auto}
+  .tblscroll{max-height:none!important;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;cursor:auto;touch-action:pan-x pan-y}
+  .tline.scrollbox{overflow:visible}
+}
 .scrollbox.drag,.tblscroll.drag{cursor:grabbing;user-select:none}
 .scrollbox.drag *,.tblscroll.drag *{cursor:grabbing!important}
 table.pt{width:100%;border-collapse:separate;border-spacing:0;min-width:820px;font-size:13px}
