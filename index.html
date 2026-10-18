@@ -42,11 +42,17 @@ window.fbReady=new Promise(res=>{window.__fbResolve=res});
     set("ok",{email:u.email,name:u.displayName||"",avatar:u.photoURL||""});
     if(!resolved){resolved=true;window.__fbResolve(db)}
   });
-  window.fbErr=e=>({"auth/unauthorized-domain":"Este endereço ainda não está autorizado no Firebase (Authentication > Configurações > Domínios autorizados).","auth/popup-closed-by-user":"A janela do Google foi fechada antes de terminar.","auth/network-request-failed":"Sem internet. Confira a conexão e tente de novo.","auth/operation-not-allowed":"O login com Google ainda não foi ativado no Firebase."}[e&&e.code]||("Não consegui entrar: "+((e&&e.message)||"erro desconhecido")));
-  window.fbSignIn=async()=>{const p=new firebase.auth.GoogleAuthProvider();p.setCustomParameters({prompt:"select_account"});
-    const standalone=window.matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
-    try{if(standalone)await auth.signInWithRedirect(p);else await auth.signInWithPopup(p)}
-    catch(e){if(e&&(e.code==="auth/popup-blocked"||e.code==="auth/operation-not-supported-in-this-environment")){try{await auth.signInWithRedirect(p)}catch(x){set("error",{err:fbErr(x)})}}else if(e&&e.code!=="auth/cancelled-popup-request")set("error",{err:fbErr(e)})}};
+  window.fbErr=e=>({"auth/unauthorized-domain":"Este endereço ainda não está autorizado no Firebase (Authentication > Configurações > Domínios autorizados).","auth/popup-closed-by-user":"A janela do Google foi fechada antes de terminar.","auth/network-request-failed":"Sem internet. Confira a conexão e tente de novo.","auth/operation-not-allowed":"O login com Google ainda não foi ativado no Firebase.","auth/web-storage-unsupported":"O navegador está bloqueando o armazenamento. Desative a navegação anônima ou o bloqueio de cookies e tente de novo.","auth/internal-error":"O Google não respondeu. Feche e abra o app de novo e tente outra vez.","auth/too-many-requests":"Muitas tentativas seguidas. Espere um minuto e tente de novo."}[e&&e.code]||("Não consegui entrar: "+((e&&e.message)||"erro desconhecido")));
+  const inApp=/FBAN|FBAV|Instagram|WhatsApp|Line\/|; wv\)|WebView|GSA\//i.test(navigator.userAgent);
+  window.fbSignIn=async()=>{
+    if(inApp){set("error",{err:"Este navegador interno não permite entrar com Google. Abra o endereço no Chrome ou no Safari."});return}
+    const p=new firebase.auth.GoogleAuthProvider();p.setCustomParameters({prompt:"select_account"});
+    set("checking");
+    try{await auth.signInWithPopup(p)}
+    catch(e){const c=e&&e.code;
+      if(c==="auth/popup-blocked"||c==="auth/operation-not-supported-in-this-environment"||c==="auth/web-storage-unsupported"){try{await auth.signInWithRedirect(p);return}catch(x){set("error",{err:fbErr(x)});return}}
+      if(c==="auth/popup-closed-by-user"||c==="auth/cancelled-popup-request"){set("out");return}
+      set("error",{err:fbErr(e)})}};
 })();
 </script>
 </head>
