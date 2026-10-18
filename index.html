@@ -715,7 +715,7 @@ const BLANK=()=>({name:"Milena de Fátima Pinho Rietz",display:"Milena Rietz",cr
   patients:[],records:[],extras:[],monthly:{},leads:[],plans:[],expenses:[],tasks:[],habits:[],notes:[],
   expCats:["Aluguel da sala","CRP e anuidade","Supervisão","Terapia pessoal","Cursos e formação","Marketing","Materiais e testes","Impostos","Outros"],demo:false,
   clinic:"Rietz",address:"",city:"Sinop - MT",phoneProf:"",cpfProf:"",pix:"",workDays:[1,2,3,4,5],workStart:"08:00",workEnd:"19:00",gap:10,
-  deductCats:["Aluguel da sala","CRP e anuidade","Supervisão","Cursos e formação","Materiais e testes","Impostos"],scales:[],receiptSeq:1,confirm:{},photo:"",photoMode:"",homework:[],supervision:[],blocks:[],drafts:{},weekLimit:25,goalMonth:0,pin:"",lockMin:15,
+  deductCats:["Aluguel da sala","CRP e anuidade","Supervisão","Cursos e formação","Materiais e testes","Impostos"],scales:[],receiptSeq:1,confirm:{},theme:"",photo:"",photoMode:"",homework:[],supervision:[],blocks:[],drafts:{},weekLimit:25,goalMonth:0,pin:"",lockMin:15,
   msgCare:"Oi, {nome}! Senti sua falta nas últimas sessões. Está tudo bem por aí? Se quiser, podemos conversar sobre retomar ou ajustar o horário. Estou por aqui. {assinatura}",
   msgFollow:"Oi, {nome}! Aqui é {assinatura}. Há um tempo você me procurou e eu queria saber como você está. Se ainda fizer sentido, tenho horários disponíveis. Um abraço!",
   msgBlock:"Oi, {nome}! Passando para avisar que não teremos sessão entre {de} e {ate} ({motivo}). Retomamos normalmente a partir de {volta}. Qualquer coisa, me chame. {assinatura}",
@@ -725,7 +725,7 @@ const BLANK=()=>({name:"Milena de Fátima Pinho Rietz",display:"Milena Rietz",cr
     {id:"tp3",name:"Formato SOAP",body:"S (subjetivo, relato do paciente):\n\nO (observação da psicóloga):\n\nA (análise):\n\nP (plano):"}],
   msgRemind:"Oi, {nome}! Passando para confirmar nossa sessão {dia}, às {hora}. Se tiver algum imprevisto, me avise por aqui. {assinatura}",
   msgCharge:"Oi, {nome}! Tudo bem? Passando para lembrar do pagamento da {ref}, no valor de {valor}. Minha chave Pix é {pix}. Obrigada! {assinatura}"});
-const PROFILE_KEYS=["photo","photoMode","weekLimit","goalMonth","pin","lockMin","msgCare","msgFollow","msgBlock","policyMiss","name","display","crp","title","approach","sessionMin","chargeMiss","expCats","clinic","address","city","phoneProf","cpfProf","pix","workDays","workStart","workEnd","gap","deductCats","templates","msgRemind","msgCharge","receiptSeq"];
+const PROFILE_KEYS=["theme","photo","photoMode","weekLimit","goalMonth","pin","lockMin","msgCare","msgFollow","msgBlock","policyMiss","name","display","crp","title","approach","sessionMin","chargeMiss","expCats","clinic","address","city","phoneProf","cpfProf","pix","workDays","workStart","workEnd","gap","deductCats","templates","msgRemind","msgCharge","receiptSeq"];
 const PER={manha:"Manhã",tarde:"Tarde",noite:"Noite"};
 const ORIG=()=>["","Indicação","Instagram","Google","WhatsApp","Convênio","Outro"].map(x=>[x,x||"Não informado"]);
 const SCALES={
@@ -1552,7 +1552,7 @@ function vNotas(){
   return vh("Notas","note","Nota")+`<div class="panel"><div class="field"><input id="nf" placeholder="Filtrar notas" value="${esc(ui.nf)}" aria-label="Filtrar notas"></div>${l.length?`<div class="notes">${l.map(noteCard).join("")}</div>`:empty(S.notes.length?"Nenhuma nota com esse termo.":"Anote ideias, leituras e lembretes.","note","Nova nota")}</div>`;
 }
 function vConfig(){
-  let th="";try{th=localStorage.getItem("painel-mi-theme")||""}catch(e){}
+  const th=S.theme||"";
   const F=(id,l,v,ph,t)=>`<div class="field"><label for="${id}">${l}</label><input id="${id}" ${t?`type="${t}"`:""} ${ph?`placeholder="${ph}"`:""} value="${esc(v)}"></div>`;
   return vh("Configurações")+`<div class="panel" style="max-width:720px">
   <p class="fsec">Perfil profissional</p>
@@ -1586,7 +1586,7 @@ function vConfig(){
   <div class="field"><label for="cfPolicy">Política de faltas e desmarcações</label><textarea id="cfPolicy" style="min-height:70px">${esc(S.policyMiss)}</textarea></div>
   <p class="fsec">Aparência</p>
   <div class="field"><label for="cfTheme">Tema</label><select id="cfTheme"><option value="" ${th===""?"selected":""}>Igual ao sistema</option><option value="light" ${th==="light"?"selected":""}>Claro</option><option value="dark" ${th==="dark"?"selected":""}>Escuro</option></select></div>
-  <div class="actions"><button class="btn" id="cfSave">Salvar configurações</button></div></div>
+  <p id="cfMsg" style="margin:4px 0 0;color:var(--ok);font-size:12.5px;font-weight:600">Tudo o que você muda aqui é salvo na hora e vale para todos os seus aparelhos.</p></div>
   <div class="panel" style="max-width:720px"><p class="fsec">Privacidade</p>
   <p style="margin:0;color:var(--soft);font-size:13px">${S.pin?"O PIN está ativo. O painel pede o código ao abrir e depois de um tempo sem uso.":"Crie um PIN de 4 a 6 números para proteger o painel de olhares curiosos, por exemplo se alguém pegar seu celular."}</p>
   <div class="frow"><div class="field"><label for="pin1">${S.pin?"Novo PIN":"PIN"}</label><input id="pin1" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password"></div><div class="field"><label for="pin2">Repita o PIN</label><input id="pin2" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password"></div></div>
@@ -1599,7 +1599,7 @@ function vConfig(){
 }
 
 function render(){
-  const y0=window.scrollY;
+  const y0=window.scrollY;if(document.documentElement.getAttribute("data-theme")!==(S.theme||null))applyTheme(S.theme||"");
   const d=new Date(),hr=d.getHours();
   const nm=S.display||firstName(S.name)||"Milena";
   $("#hello").textContent=(hr<12?"Bom dia":hr<18?"Boa tarde":"Boa noite")+", "+firstName(nm)+"!";
@@ -1622,7 +1622,7 @@ function render(){
     $("#w-today").innerHTML=wToday();$("#w-next").innerHTML=wNext();$("#w-leads").innerHTML=wLeads();$("#w-sched").innerHTML=wSched();$("#w-pend").innerHTML=wPend();
     $("#w-fin").innerHTML=wFin();$("#w-rot").innerHTML=wRot();$("#w-notes").innerHTML=wNotes();$("#rail").innerHTML=wRail();
   }
-  else $("#v-"+V).innerHTML={agenda:vAgenda,pacientes:vPacientes,paciente:vPaciente,contatos:vContatos,hoje:vHoje,supervisao:vSup,financeiro:vFin,relatorios:vRel,planos:vPlanos,rotina:vRotina,notas:vNotas,config:vConfig}[V]();
+  else if(!(V==="config"&&(ui.keepView||(document.activeElement&&document.activeElement.closest&&document.activeElement.closest("#v-config")&&document.activeElement.matches("input,textarea,select")))))$("#v-"+V).innerHTML={agenda:vAgenda,pacientes:vPacientes,paciente:vPaciente,contatos:vContatos,hoje:vHoje,supervisao:vSup,financeiro:vFin,relatorios:vRel,planos:vPlanos,rotina:vRotina,notas:vNotas,config:vConfig}[V]();
   const el=$("#v-"+V);
   if(ui.enter){ui.enter=false;el.classList.remove("enter");void el.offsetWidth;el.classList.add("enter");clearTimeout(render._t);render._t=setTimeout(()=>el.classList.remove("enter"),900)}
   if(ui.flash){document.querySelectorAll(ui.flash).forEach(x=>x.classList.add("pop"));ui.flash=null}
@@ -1925,17 +1925,7 @@ document.addEventListener("click",e=>{
     if(D.csv==="carne")return saveCSV(`carne-leao-${ui.ry}.csv`,[["Mês","Recebido","Despesas dedutíveis","Base"],...rows.map(r=>[cap(MES[+r.m.slice(5)-1]),f(r.rec),f(r.ded),f(r.base)]),["Total",f(rows.reduce((a,r)=>a+r.rec,0)),f(rows.reduce((a,r)=>a+r.ded,0)),f(rows.reduce((a,r)=>a+r.base,0))]]);
     return saveCSV(`recebido-por-paciente-${ui.ry}.csv`,[["Paciente","CPF","Total recebido"],...payers.map(x=>[x.p.name,x.p.cpf||"",f(x.v)])])}
   if(b.id==="clrDone"){S.tasks=S.tasks.filter(t=>!t.done);save();toast("Concluídas removidas");return}
-  if(b.id==="cfSave"){const v=id=>$("#"+id).value.trim(),sp=x=>x.split(",").map(y=>y.trim()).filter(Boolean);
-    S.name=v("cfName")||S.name;S.display=v("cfDisp");S.crp=v("cfCrp");S.cpfProf=v("cfCpf");S.title=v("cfTitle")||"Psicóloga clínica";S.approach=v("cfAppr");
-    S.clinic=v("cfClinic")||"Rietz";S.phoneProf=v("cfPhone");S.address=v("cfAddr");S.city=v("cfCity");S.pix=v("cfPix");
-    S.workDays=[0,1,2,3,4,5,6].filter(d=>$("#cfWd"+d).checked);S.workStart=v("cfStart")||"08:00";S.workEnd=v("cfEnd")||"19:00";
-    if(tmin(S.workEnd)<=tmin(S.workStart)){toast("O fim do atendimento precisa ser depois do início.");return}
-    S.sessionMin=Math.max(10,+v("cfMin")||50);S.gap=Math.max(0,+v("cfGap")||0);S.chargeMiss=$("#cfMiss").checked;
-    S.goalMonth=Math.max(0,+v("cfGoal")||0);S.weekLimit=Math.max(0,+v("cfLimit")||0);S.lockMin=+$("#cfLock").value;
-    S.msgCare=$("#cfMsgCare").value.trim()||BLANK().msgCare;S.msgFollow=$("#cfMsgFollow").value.trim()||BLANK().msgFollow;S.msgBlock=$("#cfMsgBlock").value.trim()||BLANK().msgBlock;S.policyMiss=$("#cfPolicy").value.trim()||BLANK().policyMiss;
-    S.msgRemind=$("#cfMsgR").value.trim()||BLANK().msgRemind;S.msgCharge=$("#cfMsgC").value.trim()||BLANK().msgCharge;
-    const c=sp(v("cfCats"));S.expCats=c.length?c:["Outros"];S.deductCats=sp(v("cfDed"));
-    const th=$("#cfTheme").value;try{localStorage.setItem("painel-mi-theme",th)}catch(e){}applyTheme(th);save();toast("Configurações salvas");return}
+
 });
 $("#scrim").addEventListener("click",e=>{if(e.target.id==="scrim")closeSheet()});
 document.addEventListener("keydown",e=>{if(!$("#lock").hidden){if(/^\d$/.test(e.key))pinKey(e.key);else if(e.key==="Backspace")pinKey("⌫");return}if(e.key==="Escape"){if(!$("#scrim").hidden)closeSheet();else if(!$("#live").hidden)minimizeLive()}});
@@ -1988,11 +1978,26 @@ document.addEventListener("scroll",e=>{const t=e.target;if(t&&t.dataset&&t.datas
   document.addEventListener("mouseup",()=>{if(el){el.classList.remove("drag");if(moved){dragged=true;setTimeout(()=>dragged=false,60)}}el=null});
   document.addEventListener("click",e=>{if(dragged){e.stopPropagation();e.preventDefault();dragged=false}},true);
 })();
+function saveConfig(){if(!$("#cfName"))return;const v=id=>$("#"+id).value.trim(),sp=x=>x.split(",").map(y=>y.trim()).filter(Boolean);
+    S.name=v("cfName")||S.name;S.display=v("cfDisp");S.crp=v("cfCrp");S.cpfProf=v("cfCpf");S.title=v("cfTitle")||"Psicóloga clínica";S.approach=v("cfAppr");
+    S.clinic=v("cfClinic")||"Rietz";S.phoneProf=v("cfPhone");S.address=v("cfAddr");S.city=v("cfCity");S.pix=v("cfPix");
+    S.workDays=[0,1,2,3,4,5,6].filter(d=>$("#cfWd"+d).checked);
+    const ws=v("cfStart")||"08:00",we=v("cfEnd")||"19:00";if(tmin(we)>tmin(ws)){S.workStart=ws;S.workEnd=we}
+    S.sessionMin=Math.max(10,+v("cfMin")||50);S.gap=Math.max(0,+v("cfGap")||0);S.chargeMiss=$("#cfMiss").checked;
+    S.goalMonth=Math.max(0,+v("cfGoal")||0);S.weekLimit=Math.max(0,+v("cfLimit")||0);S.lockMin=+$("#cfLock").value;
+    S.msgCare=$("#cfMsgCare").value.trim()||BLANK().msgCare;S.msgFollow=$("#cfMsgFollow").value.trim()||BLANK().msgFollow;S.msgBlock=$("#cfMsgBlock").value.trim()||BLANK().msgBlock;S.policyMiss=$("#cfPolicy").value.trim()||BLANK().policyMiss;
+    S.msgRemind=$("#cfMsgR").value.trim()||BLANK().msgRemind;S.msgCharge=$("#cfMsgC").value.trim()||BLANK().msgCharge;
+    const c=sp(v("cfCats"));S.expCats=c.length?c:["Outros"];S.deductCats=sp(v("cfDed"));
+    S.theme=$("#cfTheme").value;applyTheme(S.theme);
+    ui.keepView=true;dirty=true;lsSet();clearTimeout(tmr);tmr=setTimeout(flush,600);setSync();render();ui.keepView=false;
+    const m=$("#cfMsg");if(m){m.textContent="Salvo automaticamente";m.classList.remove("pop");void m.offsetWidth;m.classList.add("pop")}}
+let cfT;document.addEventListener("input",e=>{if(e.target.closest("#v-config")&&!/^pin/.test(e.target.id)){clearTimeout(cfT);cfT=setTimeout(saveConfig,500)}});
+document.addEventListener("change",e=>{if(e.target.closest("#v-config")&&!/^pin/.test(e.target.id)){clearTimeout(cfT);saveConfig()}});
 function applyTheme(t){if(t)document.documentElement.setAttribute("data-theme",t);else document.documentElement.removeAttribute("data-theme")}
-try{applyTheme(localStorage.getItem("painel-mi-theme")||"")}catch(e){}
 
 /* ---------- inicialização ---------- */
 const local=lsGet();if(local)S=norm(local);
+try{const t0=localStorage.getItem("painel-mi-theme");if(t0&&(!local||local.theme===undefined))S.theme=t0}catch(e){}
 try{history.scrollRestoration="manual"}catch(e){}
 try{history.replaceState({guard:1},"");history.pushState(navState(),"")}catch(e){}
 try{const lv=JSON.parse(localStorage.getItem("painel-mi-live")||"null");if(lv&&lv.date===TODAY())ui.live=lv;else localStorage.removeItem("painel-mi-live")}catch(e){}
