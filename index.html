@@ -312,7 +312,7 @@ button.tag:hover{filter:brightness(.95)}
 .tabs button[aria-pressed="true"]{background:var(--rail);color:var(--onrail)}
 .monthnav{display:flex;align-items:center;gap:8px;font-weight:600}
 .monthnav button:not(.btn){width:34px;height:34px;flex:none;border-radius:50%;background:var(--pill);border:1px solid var(--line);font-size:16px}
-.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:stretch}
 .plan{background:var(--pill);border:1px solid var(--line);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:6px;text-align:left;min-width:0}
 .plan b{font-size:15px}
 .plan .pv{font-family:var(--display);font-size:24px;font-variant-numeric:tabular-nums}
@@ -695,15 +695,15 @@ const I={
   agenda:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>',
   pacientes:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.2a5 5 0 0 1 5.5 5.8"/>',
   contatos:'<path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/>',
-  financeiro:'<rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10h18M16 15h2"/>',
-  planos:'<path d="M4 7l8-4 8 4-8 4z"/><path d="M4 12l8 4 8-4M4 17l8 4 8-4"/>',
-  rotina:'<path d="m4 12 4 4L20 6"/>',
-  notas:'<path d="M5 3h10l4 4v14H5z"/><path d="M9 11h6M9 15h6"/>',
-  config:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>',
+  financeiro:'<path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H18v3"/><rect x="4" y="8" width="17" height="11" rx="2.5"/><path d="M21 12h-4a1.5 1.5 0 0 0 0 3h4"/>',
+  planos:'<path d="M3 11.5V4.5a1.5 1.5 0 0 1 1.5-1.5h7L21 12.5 12.5 21z"/><circle cx="7.5" cy="7.5" r="1.6"/>',
+  rotina:'<path d="M10 6h10M10 12h10M10 18h10"/><path d="m3.5 6 1.5 1.5L7.5 5M3.5 12l1.5 1.5L7.5 11"/><circle cx="5" cy="18" r="1.4"/>',
+  notas:'<path d="M14 4h5v16H5V4h5"/><path d="M14 2.5v5l-2-1.4-2 1.4v-5z"/><path d="M8.5 12h7M8.5 15.5h5"/>',
+  config:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
   menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',plus:'<path d="M12 5v14M5 12h14"/>',
   edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/>',trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
   relatorios:'<path d="M4 20V11M10 20V5M16 20v-6M21 20H3"/>',doc:'<path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h7M9 8h3"/>',
-  hoje:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',supervisao:'<path d="M4 19c0-3 3-5 6-5s6 2 6 5"/><circle cx="10" cy="8" r="3.5"/><path d="M17 4l3 3-3 3"/>',play:'<path d="M8 5l11 7-11 7z"/>',lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',file:'<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/>',
+  hoje:'<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/>',supervisao:'<circle cx="8" cy="9" r="3"/><path d="M2.5 20a5.5 5.5 0 0 1 11 0"/><path d="M14 3.5h7v5.5h-3.5L15.5 11V9H14z"/>',play:'<path d="M8 5l11 7-11 7z"/>',lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',file:'<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/>',
   back:'<path d="M15 5l-7 7 7 7"/>',chat:'<path d="M20 12a8 8 0 0 1-11.8 7L4 20l1.1-4A8 8 0 1 1 20 12z"/>'
 };
 const svg=(k,w)=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w||2}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[k]}</svg>`;
@@ -997,7 +997,7 @@ function wNext(){
   const title=dd===1?"Confirmar amanhã":"Confirmar "+SEMF[parse(d).getDay()].replace("-feira","");
   const noPhone=l.filter(o=>!o.p.phone).length;
   return head(title,`${ok} de ${l.length} confirmada${l.length===1?"":"s"}`)+
-    `<p style="margin:0;color:var(--soft);font-size:12.5px">${cap(fdateL(d))}. Toque no balão para enviar o lembrete e, quando o paciente responder, toque no status para confirmar.${noPhone?` ${plural(noPhone,"paciente está","pacientes estão")} sem telefone na ficha.`:""}</p>`+
+    `<p style="margin:0;color:var(--soft);font-size:12.5px">${cap(fdateL(d))}.${noPhone?` ${plural(noPhone,"paciente está","pacientes estão")} sem telefone na ficha.`:""}</p>`+
     `<div class="list">${l.map(o=>occRow(o)).join("")}</div>`;
 }
 function wLeads(){
@@ -1114,7 +1114,7 @@ function vAgenda(){
   <div class="vh"><h2>Semana de ${fdate(wk[0])} a ${fdate(wk[6])}</h2><div class="monthnav"><button data-wk="-7" aria-label="Semana anterior">‹</button><button data-wk="7" aria-label="Próxima semana">›</button></div></div>
   ${(()=>{const w=weekStats(ui.sel);return `<div class="panel">${head("Ocupação da semana",w.cap?w.pct+"%":"")}<div class="hb"><span>${w.used} de ${w.cap} horários</span><span class="tr"><i style="width:${Math.min(100,w.pct)}%"></i></span><span class="v">${w.free?"cabem mais "+w.free:"lotada"}</span></div>${S.weekLimit&&w.used>+S.weekLimit?`<p style="margin:0;color:var(--warn);font-size:12.5px">Acima do seu limite de ${S.weekLimit} sessões por semana.</p>`:""}</div>`})()}
   <div class="panel">${head("Bloqueios de agenda",S.blocks.filter(b=>b.to>=TODAY()).length?plural(S.blocks.filter(b=>b.to>=TODAY()).length,"ativo","ativos"):"","block")}
-  ${S.blocks.length?`<div class="list">${S.blocks.slice().sort((a,b)=>b.from.localeCompare(a.from)).map(b=>`<div class="row"><span class="ini" style="background:var(--frame);color:var(--plum);border:1px solid var(--line)">${svg("lock")}</span><span class="txt"><b>${esc(b.reason||"Bloqueio")} · ${fdate(b.from)} a ${fdate(b.to)}</b><small>${b.to<TODAY()?"Já passou":plural(blockAffected(b).length,"paciente afetado","pacientes afetados")}${b.note?" · "+esc(b.note):""}</small></span><span class="end">${b.to>=TODAY()?`<button class="btn small ghost" data-blkmsg="${b.id}">Avisar</button>`:""}<button class="icon-btn" data-edit="block:${b.id}" aria-label="Editar">${svg("edit")}</button></span></div>`).join("")}</div>`:`<p style="margin:0;color:var(--soft);font-size:12.5px">Férias, feriados ou congressos: as sessões fixas do período ficam suspensas e você avisa os pacientes com uma mensagem pronta.</p>`}</div>
+  ${S.blocks.length?`<div class="list">${S.blocks.slice().sort((a,b)=>b.from.localeCompare(a.from)).map(b=>`<div class="row"><span class="ini" style="background:var(--frame);color:var(--plum);border:1px solid var(--line)">${svg("lock")}</span><span class="txt"><b>${esc(b.reason||"Bloqueio")} · ${fdate(b.from)} a ${fdate(b.to)}</b><small>${b.to<TODAY()?"Já passou":plural(blockAffected(b).length,"paciente afetado","pacientes afetados")}${b.note?" · "+esc(b.note):""}</small></span><span class="end">${b.to>=TODAY()?`<button class="btn small ghost" data-blkmsg="${b.id}">Avisar</button>`:""}<button class="icon-btn" data-edit="block:${b.id}" aria-label="Editar">${svg("edit")}</button></span></div>`).join("")}</div>`:`<p style="margin:0;color:var(--soft);font-size:12.5px">Nenhum bloqueio marcado.</p>`}</div>
   <div class="panel">${head("Horários livres da semana",S.leads.some(l=>l.status==="espera")?plural(S.leads.filter(l=>l.status==="espera").length,"pessoa na espera","pessoas na espera"):"")}
   <p style="margin:0;color:var(--soft);font-size:12.5px">Baseado no seu horário de atendimento (${(S.workDays||[]).map(d=>SEM[d]).join(", ")}, ${esc(S.workStart)} às ${esc(S.workEnd)}). Horários destacados combinam com alguém da lista de espera. Toque para agendar.</p>
   ${wk.map(d=>{const h=slotsHtml(d);return h?`<div class="ph2"><b style="min-width:120px;font-size:13px">${cap(fdateL(d))}</b></div>${h}`:""}).join("")||empty("Sem horários livres nesta semana.")}</div>
@@ -1149,7 +1149,7 @@ function vPacientes(){
     <td class="r num">${r.val?brl(r.val)+(isMonthly(p)?"<small>/mês</small>":""):"<small>–</small>"}</td>
     <td>${r.ns?fdate(r.ns.date)+" · "+esc(r.ns.time||""):`<small>Nenhuma</small>`}</td>
     <td class="r">${r.op?`<span class="money pend">${brl(r.op)}</span>`:`<small>–</small>`}</td><td>${tag(STAT,p.status||"ativo")}</td></tr>`}).join("")}
-  </tbody></table></div><p style="margin:0;color:var(--soft);font-size:12px">Toque no título de uma coluna para ordenar. No computador, dá para arrastar a tabela com o mouse.</p>`
+  </tbody></table></div>`
   :empty(S.patients.length?"Nenhum paciente com esses filtros.":"Cadastre seu primeiro paciente.",S.patients.length?"":"patient","Novo paciente")}</div>`;
 }
 function vPaciente(){
@@ -1183,7 +1183,7 @@ function vPaciente(){
   } else if(ui.ptab==="fin"){
     const items=recs.filter(charged);
     const months=[];if(isMonthly(p)){for(let i=0;i<6;i++){const m=madd(TODAY().slice(0,7),-i);if(p.start&&p.start.slice(0,7)>m)break;const e=S.monthly[p.id+"|"+m]||{};months.push({m,k:p.id+"|"+m,paid:!!e.paid,v:e.value!=null?+e.value:monthValue(p)})}}
-    h+=`<div class="panel"><div class="ph"><h2>Recibo do mês</h2></div><div class="vh" style="gap:8px"><div class="field" style="flex:1;min-width:160px"><select id="rcm" aria-label="Mês do recibo">${[...Array(12)].map((_,i)=>madd(TODAY().slice(0,7),-i)).map(m=>`<option value="${m}">${mlabel(m)}</option>`).join("")}</select></div><button class="btn" data-rcptm="${p.id}">${svg("doc")} Gerar recibo</button></div><p style="margin:0;color:var(--soft);font-size:12.5px">Junta todas as sessões pagas do mês em um único recibo, com valor por extenso.</p></div>
+    h+=`<div class="panel"><div class="ph"><h2>Recibo do mês</h2></div><div class="vh" style="gap:8px"><div class="field" style="flex:1;min-width:160px"><select id="rcm" aria-label="Mês do recibo">${[...Array(12)].map((_,i)=>madd(TODAY().slice(0,7),-i)).map(m=>`<option value="${m}">${mlabel(m)}</option>`).join("")}</select></div><button class="btn" data-rcptm="${p.id}">${svg("doc")} Gerar recibo</button></div></div>
     <div class="panel">${isMonthly(p)?`<p class="sub">Mensalidades · ${esc(pl.name)}</p><div class="list">${months.map(x=>`<div class="row"><span class="txt"><b>${mlabel(x.m)}</b></span><span class="money">${brl(x.v)}</span><button class="tag ${x.paid?"t-ok":"t-warn"}" data-pay="mens:${x.k}">${x.paid?"Pago":"Em aberto"}</button>${x.paid?`<button class="icon-btn" data-rcpt="mens:${x.k}" aria-label="Gerar recibo" title="Gerar recibo">${svg("doc")}</button>`:""}</div>`).join("")}</div>`:""}
      <p class="sub">Sessões cobradas</p>${items.length?`<div class="list">${items.map(r=>`<div class="row"><span class="txt"><b>${cap(fdateL(r.date))}</b><small>${esc(SST[r.status][0]+(r.method&&r.paid?" · "+r.method:""))}</small></span><span class="money">${brl(r.value)}</span>${payTag(r)}${r.paid?`<button class="icon-btn" data-rcpt="rec:${r.id}" aria-label="Gerar recibo" title="Gerar recibo">${svg("doc")}</button>`:""}</div>`).join("")}</div>`:empty(isMonthly(p)?"As sessões deste paciente estão incluídas na mensalidade.":"Nenhuma sessão cobrada ainda.")}</div>`;
   } else if(ui.ptab==="tempo"){h+=timelineHtml(p);
@@ -1253,14 +1253,14 @@ function vRel(){
   const noCpf=payers.filter(x=>!x.p.cpf).length;
   return vh("Relatórios")+`<div class="monthnav"><button data-ry="-1" aria-label="Ano anterior">‹</button><input class="inl num" type="number" id="ryIn" min="2000" max="2100" value="${y}" style="width:92px;text-align:center" aria-label="Ano"><button data-ry="1" aria-label="Próximo ano">›</button>${y!==new Date().getFullYear()?`<button class="btn small ghost" data-rynow="1">Este ano</button>`:""}</div>
   <div class="panel">${head("Carnê-Leão e livro-caixa")}
-  <p style="margin:0;color:var(--soft);font-size:12.5px">Recebido de pacientes por mês e despesas dedutíveis (${esc((S.deductCats||[]).join(", ")||"nenhuma categoria marcada")}). Valores em reais. Use como apoio e confirme com seu contador.</p>
+  <p style="margin:0;color:var(--soft);font-size:12.5px">Dedutíveis: ${esc((S.deductCats||[]).join(", ")||"nenhuma categoria marcada")}.</p>
   <div class="tblw"><table class="tbl"><thead><tr><th>Mês</th><th>Recebido</th><th>Dedutível</th><th>Base</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${cap(MES[+r.m.slice(5)-1])}</td><td>${nbr(r.rec)}</td><td>${nbr(r.ded)}</td><td>${nbr(r.base)}</td></tr>`).join("")}</tbody>
   <tfoot><tr><td>Total</td><td>${nbr(tot("rec"))}</td><td>${nbr(tot("ded"))}</td><td>${nbr(tot("base"))}</td></tr></tfoot></table></div>
   <div class="actions" style="justify-content:flex-start"><button class="btn small ghost" data-csv="carne">Baixar planilha do ano</button><button class="btn small ghost" data-csv="pag">Baixar recebido por paciente</button></div></div>
   ${(()=>{const ws=[0,1,2,3].map(i=>{const b=addD(TODAY(),7*i),w=weekStats(b);return {lbl:i===0?"Esta semana":"Semana de "+fdate(w.wk[0]),...w}});const avgH=(()=>{let h=0,v=0;rows.forEach(r=>{const x=hourly(r.m);if(x.h){h+=x.h;v+=r.rec}});return h?v/h:null})();
     return `<div class="two"><div class="panel">${head("Ocupação da agenda",slotsPerDay()+" horários por dia")}<div class="list" style="gap:10px">${ws.map(w=>`<div class="hb"><span>${w.lbl}</span><span class="tr"><i style="width:${Math.min(100,w.pct)}%"></i></span><span class="v">${w.pct}% · ${w.free?"+"+w.free+" livres":"lotada"}</span></div>`).join("")}</div>
     <p style="margin:0;color:var(--soft);font-size:12.5px">Dá para receber até ${plural(ws[0].free,"novo paciente semanal","novos pacientes semanais")} nesta semana, pelo seu horário de atendimento.</p></div>
-    <div class="panel">${head("Valor médio por hora",String(y))}<div class="stats"><div class="stat"><small>Por hora no ano</small><b>${avgH==null?"–":brl(avgH)}</b></div><div class="stat"><small>Sessão de ${S.sessionMin} min</small><b>${avgH==null?"–":brl(avgH*(+S.sessionMin||50)/60)}</b></div></div><p style="margin:0;color:var(--soft);font-size:12.5px">Inclui o efeito das faltas e dos valores sociais. O detalhe do mês com despesas está no Financeiro.</p></div></div>`})()}
+    <div class="panel">${head("Valor médio por hora",String(y))}<div class="stats"><div class="stat"><small>Por hora no ano</small><b>${avgH==null?"–":brl(avgH)}</b></div><div class="stat"><small>Sessão de ${S.sessionMin} min</small><b>${avgH==null?"–":brl(avgH*(+S.sessionMin||50)/60)}</b></div></div></div></div>`})()}
   <div class="two"><div class="panel">${head("Recebido por paciente",String(y))}${noCpf?`<p style="margin:0;color:var(--warn);font-size:12.5px">${plural(noCpf,"paciente sem CPF","pacientes sem CPF")} na ficha. O Carnê-Leão pede o CPF de quem pagou.</p>`:""}
    ${payers.length?`<div class="list">${payers.map(x=>`<button class="row" data-pac="${x.p.id}"><span class="txt"><b>${esc(x.p.name)}</b><small>${x.p.cpf?"CPF "+esc(x.p.cpf):"CPF não cadastrado"}</small></span><span class="money in">${brl(x.v)}</span></button>`).join("")}</div>`:empty("Nenhum recebimento neste ano.")}</div>
   <div class="panel">${head("Faltas nos últimos 90 dias",totN?Math.round(totF/totN*100)+"% no geral":"")}
@@ -1348,7 +1348,7 @@ function endLive(){ui.live=null;try{localStorage.removeItem("painel-mi-live")}ca
 function updatePill(){const pl=$("#livePill");if(ui.live&&$("#live").hidden){const p=P(ui.live.pid);pl.hidden=false;pl.textContent=(p?firstName(p.name):"Sessão")+" · "+mmss(Date.now()-ui.live.start)}else pl.hidden=true}
 /* ---------- alta ---------- */
 function openDischarge(pid,st){const p=P(pid);if(!p)return;
-  showSheet(`<h2>Encerramento de ${esc(firstName(p.name))}</h2><p class="hint">O resumo fica na ficha e na linha do tempo. Se quiser, o app cria uma tarefa para você entrar em contato depois.</p>
+  showSheet(`<h2>Encerramento de ${esc(firstName(p.name))}</h2>
   <div class="frow">${fieldHtml({k:"dt",l:"Tipo",t:"select",o:()=>[["alta","Alta"],["encerrado","Encerramento (interrupção)"]]},st||"alta")}${fieldHtml({k:"dd",l:"Data",t:"date"},TODAY())}</div>
   ${fieldHtml({k:"dn",l:"Resumo do encerramento",t:"textarea"},p.dischargeNote||"")}
   ${fieldHtml({k:"df",l:"Acompanhamento depois",t:"select",o:()=>[["0","Sem retorno programado"],["1","Contato em 1 mês"],["3","Contato em 3 meses"],["6","Contato em 6 meses"]]},"3")}
@@ -1364,7 +1364,7 @@ function blockMsg(id){const b=S.blocks.find(x=>x.id===id);if(!b)return;const af=
   const rows=af.map(o=>{let nx=null;for(let i=1;i<=60&&!nx;i++){const d=addD(b.to,i);nx=occ(d).find(x=>x.pid===o.pid&&x.st==="agendada")||null}
     const msg=fillT(S.msgBlock,{nome:firstName(o.p.name),de:fdateN(b.from),ate:fdateN(b.to),motivo:(b.reason||"bloqueio").toLowerCase(),volta:nx?fdateL(nx.date)+" às "+nx.time:"a próxima semana",assinatura:SIG()});
     return `<div class="row"><span class="ini">${esc(initials(o.p.name))}</span><span class="txt"><b>${esc(o.p.name)}</b><small>Sessão de ${fdate(o.date)} suspensa${nx?" · volta "+fdate(nx.date):""}</small></span><span class="end">${o.p.phone?waBtn(waUrl(o.p.phone,msg),"Avisar pelo WhatsApp"):`<small style="color:var(--soft)">sem telefone</small>`}</span></div>`}).join("");
-  showSheet(`<h2>Avisar pacientes</h2><p class="hint">${esc(b.reason||"Bloqueio")} de ${fdate(b.from)} a ${fdate(b.to)}. ${af.length?plural(af.length,"paciente tem","pacientes têm")+" sessão nesse período. Toque no balão de cada um para enviar o aviso pronto.":"Nenhum paciente tem sessão fixa nesse período."}</p>${af.length?`<div class="list">${rows}</div>`:""}<div class="actions"><button class="btn" id="pclose">Pronto</button></div>`);
+  showSheet(`<h2>Avisar pacientes</h2><p class="hint">${esc(b.reason||"Bloqueio")} de ${fdate(b.from)} a ${fdate(b.to)}. ${af.length?plural(af.length,"paciente tem","pacientes têm")+" sessão nesse período.":"Nenhum paciente tem sessão fixa nesse período."}</p>${af.length?`<div class="list">${rows}</div>`:""}<div class="actions"><button class="btn" id="pclose">Pronto</button></div>`);
   $("#pclose").onclick=closeSheet}
 /* ---------- documentos e PDF ---------- */
 const DOCT={comp:"Declaração de comparecimento",acomp:"Declaração de acompanhamento",enc:"Encaminhamento",contr:"Contrato terapêutico"};
@@ -1518,7 +1518,6 @@ function vContatos(){
   return vh("Contatos","lead","Contato")+`<div class="panel"><div class="filters">${[["pendentes","Pendentes"],["espera","Lista de espera"],["agendado","Agendados"],["desistiu","Não seguiram"],["todos","Todos"]].map(([k,t])=>`<button class="chip" data-lf="${k}" aria-pressed="${f===k}">${t}</button>`).join("")}</div>
   <div class="datebar"><span class="dpick"><select class="inl" id="ldSel" aria-label="Filtrar por data">${[["","Qualquer data"],["hoje","Hoje"],["7","Últimos 7 dias"],["mes","Este mês"],["per","Escolher período"]].map(([k,t2])=>`<option value="${k}" ${ld===k?"selected":""}>${t2}</option>`).join("")}</select></span>
   ${ld==="per"?`<span class="dpick"><input type="date" id="ldFrom" value="${ui.ldFrom||""}" aria-label="De"></span><span style="color:var(--soft)">até</span><span class="dpick"><input type="date" id="ldTo" value="${ui.ldTo||""}" aria-label="Até"></span>`:""}</div>
-  <p class="hint" style="margin:0;color:var(--soft);font-size:12.5px">Toque no contato para editar, marcar retorno ou transformar em paciente.</p>
   ${l.length?`<div class="list scrollbox" data-sk="leads">${l.map(leadRow).join("")}</div>`:empty("Nenhum contato aqui. Registre quem te procurou para não perder o retorno.","lead","Registrar contato")}</div>`;
 }
 function vFin(){
@@ -1528,15 +1527,15 @@ function vFin(){
   return vh("Financeiro","expense","Despesa")+`<div class="monthnav"><button data-fm="-1" aria-label="Mês anterior">‹</button><label class="mlbl" style="min-width:150px;text-align:center">${mlabel(m)}<input type="month" id="fmIn" value="${m}" aria-label="Escolher mês e ano"></label><button data-fm="1" aria-label="Próximo mês">›</button>${m!==TODAY().slice(0,7)?`<button class="btn small ghost" data-fmnow="1">Este mês</button>`:""}</div>
   <div class="panel"><div class="stats"><div class="stat"><small>Previsto</small><b>${brl(f.prev)}</b></div><div class="stat"><small>Recebido</small><b class="in">${brl(f.rec)}</b></div><div class="stat"><small>A receber</small><b class="pend">${brl(f.open)}</b></div>
   <div class="stat"><small>Ainda agendado</small><b>${brl(f.sched)}</b></div><div class="stat"><small>Despesas</small><b class="out">${brl(f.expT)}</b></div><div class="stat"><small>Resultado</small><b class="${f.lucro>=0?"in":"out"}">${brl(f.lucro)}</b></div></div>
-  <p style="margin:0;color:var(--soft);font-size:12.5px">Previsto é o recebido, mais o que está em aberto, mais as sessões ainda agendadas no mês. Resultado é o recebido menos as despesas.</p></div>
+</div>
   ${(()=>{const g=+S.goalMonth||0,hr=hourly(m),avg=(()=>{const v=S.patients.filter(p=>p.status==="ativo"&&!isMonthly(p)).map(sessValue).filter(Boolean);return v.length?v.reduce((a,b)=>a+b,0)/v.length:150})();
     const goal=g?`<div class="panel">${head("Meta do mês",brl(g))}<div class="list" style="gap:10px"><div class="hb"><span>Recebido</span><span class="tr"><i style="width:${Math.min(100,f.rec/g*100)}%"></i></span><span class="v">${Math.round(f.rec/g*100)}%</span></div><div class="hb"><span>Com o previsto</span><span class="tr"><i style="width:${Math.min(100,f.prev/g*100)}%;opacity:.6"></i></span><span class="v">${Math.round(f.prev/g*100)}%</span></div></div>
       <p style="margin:0;color:var(--soft);font-size:12.5px">${f.rec>=g?"Meta batida! Parabéns.":f.prev>=g?"Mantendo os agendamentos e recebendo o que está em aberto, você bate a meta.":`Faltam ${brl(g-f.prev)} para a meta, o equivalente a cerca de ${plural(Math.ceil((g-f.prev)/avg),"sessão","sessões")}.`}</p></div>`
       :`<div class="panel">${head("Meta do mês")}<p style="margin:0;color:var(--soft);font-size:12.5px">Defina quanto quer faturar por mês para acompanhar o progresso aqui e no Início.</p><button class="btn small ghost" data-go="config" style="align-self:flex-start">Definir meta</button></div>`;
     const fc=[1,2,3].map(i=>{const mm=madd(TODAY().slice(0,7),i);return [mm,monthFin(mm).prev]}),fmax=Math.max(1,...fc.map(x=>x[1]));
     return `<div class="two">${goal}<div class="panel">${head("Valor por hora",mlabel(m))}<div class="stats"><div class="stat"><small>Bruto por hora</small><b>${hr.gross==null?"–":brl(hr.gross)}</b></div><div class="stat"><small>Líquido por hora</small><b class="${hr.net!=null&&hr.net<0?"out":""}">${hr.net==null?"–":brl(hr.net)}</b></div></div>
-      <p style="margin:0;color:var(--soft);font-size:12.5px">${hr.n?`${plural(hr.n,"sessão realizada","sessões realizadas")}, ${hr.h.toFixed(1).replace(".",",")} horas de atendimento. Líquido já desconta as despesas do mês.`:"Sem sessões realizadas neste mês."}</p></div></div>
-      <div class="panel">${head("Previsão dos próximos meses","pelos horários fixos")}<div class="list" style="gap:10px">${fc.map(([mm,v])=>`<div class="hb"><span>${mlabel(mm)}</span><span class="tr"><i style="width:${v/fmax*100}%"></i></span><span class="v">${brl(v)}</span></div>`).join("")}</div><p style="margin:0;color:var(--soft);font-size:12.5px">Considera a frequência de cada paciente ativo, as mensalidades e os bloqueios de agenda. Faltas e pausas podem mudar o valor.</p></div>`})()}
+      <p style="margin:0;color:var(--soft);font-size:12.5px">${hr.n?`${plural(hr.n,"sessão realizada","sessões realizadas")}, ${hr.h.toFixed(1).replace(".",",")} horas de atendimento.`:"Sem sessões realizadas neste mês."}</p></div></div>
+      <div class="panel">${head("Previsão dos próximos meses","pelos horários fixos")}<div class="list" style="gap:10px">${fc.map(([mm,v])=>`<div class="hb"><span>${mlabel(mm)}</span><span class="tr"><i style="width:${v/fmax*100}%"></i></span><span class="v">${brl(v)}</span></div>`).join("")}</div></div>`})()}
   <div class="panel">${head("Em aberto",op.length?"total "+brl(op.reduce((a,x)=>a+x.v,0)):"")}${op.length?`<div class="list scrollbox" data-sk="fopen" style="max-height:min(46vh,420px)">${op.map(openRow).join("")}</div>`:empty("Nenhum pagamento em aberto.")}</div>
   <div class="two"><div class="panel">${head("Recebimentos do mês","")}${recv.length?`<div class="list scrollbox" data-sk="frecv">${recv.map(x=>`<div class="row"><span class="txt"><b>${esc(x.t)}</b><small>${esc(x.s)}</small></span><span class="money in">${brl(x.v)}</span><button class="icon-btn" data-rcpt="${x.k}" aria-label="Gerar recibo" title="Gerar recibo">${svg("doc")}</button></div>`).join("")}</div>`:empty("Nada recebido neste mês.")}</div>
   <div class="panel">${head("Despesas do mês","","expense")}${f.exp.length?`<div class="list">${Object.entries(byCat).sort((a,b)=>b[1]-a[1]).map(([c,v])=>`<div class="row"><span class="txt"><b>${esc(c)}</b><small>${Math.round(v/f.expT*100)}% das despesas</small></span><span class="money out">${brl(v)}</span></div>`).join("")}</div><p class="sub">Lançamentos</p><div class="list scrollbox" data-sk="fexp" style="max-height:min(40vh,380px)">${f.exp.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(e=>`<div class="row"><span class="txt"><b>${esc(e.t)}</b><small>${esc(fdate(e.date)+" · "+(e.cat||"Outros"))}</small></span><span class="money">${brl(e.v)}</span><button class="icon-btn" data-edit="expense:${e.id}" aria-label="Editar">${svg("edit")}</button></div>`).join("")}</div>`:empty("Nenhuma despesa lançada.","expense","Lançar despesa")}</div></div>`;
@@ -1591,7 +1590,7 @@ function vConfig(){
   <div class="field"><label for="cfPolicy">Política de faltas e desmarcações</label><textarea id="cfPolicy" style="min-height:70px">${esc(S.policyMiss)}</textarea></div>
   <p class="fsec">Aparência</p>
   <div class="field"><label for="cfTheme">Tema</label><select id="cfTheme"><option value="" ${th===""?"selected":""}>Igual ao sistema</option><option value="light" ${th==="light"?"selected":""}>Claro</option><option value="dark" ${th==="dark"?"selected":""}>Escuro</option></select></div>
-  <p id="cfMsg" style="margin:4px 0 0;color:var(--ok);font-size:12.5px;font-weight:600">Tudo o que você muda aqui é salvo na hora e vale para todos os seus aparelhos.</p></div>
+  <p id="cfMsg" style="min-height:16px;margin:4px 0 0;color:var(--ok);font-size:12.5px;font-weight:600"></p></div>
   <div class="panel" style="max-width:720px"><p class="fsec">Privacidade</p>
   <p style="margin:0;color:var(--soft);font-size:13px">${S.pin?"O PIN está ativo. O painel pede o código ao abrir e depois de um tempo sem uso.":"Crie um PIN de 4 a 6 números para proteger o painel de olhares curiosos, por exemplo se alguém pegar seu celular."}</p>
   <div class="frow"><div class="field"><label for="pin1">${S.pin?"Novo PIN":"PIN"}</label><input id="pin1" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password"></div><div class="field"><label for="pin2">Repita o PIN</label><input id="pin2" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password"></div></div>
@@ -1682,8 +1681,6 @@ function openForm(kind,id,preset){
   if(kind==="task"&&["agenda","inicio","hoje"].includes(ui.view))defaults.date=ui.sel<TODAY()?TODAY():ui.sel;
   const val=f=>it?(f.k==="emergName"?emName(it):it[f.k]??""):(preset&&preset[f.k]!=null?preset[f.k]:defaults[f.k]??"");
   let h=`<h2>${it?"Editar":(F.fem?"Nova":"Novo")} ${F.title}</h2>`;
-  if(kind==="extra")h+=`<p class="hint">Para sessões fora do horário fixo, remarcações ou pacientes avulsos.</p>`;
-  if(kind==="patient"&&!S.plans.length)h+=`<p class="hint">Dica: crie seus planos na aba Planos para escolher aqui.</p>`;
   if(kind==="extra"&&!optsPatients(false).length){showSheet(h+empty("Cadastre um paciente ativo antes de agendar.","patient","Novo paciente")+`<div class="actions"><button class="btn ghost" id="fcancel">Fechar</button></div>`);$("#fcancel").onclick=closeSheet;return}
   h+=F.fields.map(f=>f.sec?`<p class="fsec">${f.sec}</p>`:fieldHtml(nf2(f),val(nf2(f)))).join("");
   h+=`<p id="ferr" style="margin:0;color:var(--bad);font-size:13px" hidden></p><div class="actions">${it?`<button class="btn ghost left" id="fdel" style="color:var(--bad)">${svg("trash")} Excluir</button>`:""}`+
@@ -1747,11 +1744,11 @@ function openSession(pid,date){
   ${S.templates.length?fieldHtml({k:"tpl",l:"Usar modelo de registro",t:"select",o:()=>[["","Escolher modelo"],...S.templates.map(t=>[t.id,t.name])]},""):""}
   ${fieldHtml({k:"note",l:"Registro da sessão (evolução)",t:"textarea"},ex?ex.note||"":(S.drafts[firstP+"|"+date]||""))}
   ${fieldHtml({k:"hw",l:"Tarefa para casa (opcional)",t:"text"},"")}
-  <p class="hint">Anote o essencial: temas trabalhados, intervenções, combinados e pontos para a próxima sessão.</p>
+  <i class="emk" hidden></i>
   <p id="ferr" style="margin:0;color:var(--bad);font-size:13px" hidden></p>
   <div class="actions">${ex?`<button class="btn ghost left" id="fdel" style="color:var(--bad)">${svg("trash")} Apagar registro</button>`:o&&o.xid?`<button class="btn ghost left" id="fdelx" style="color:var(--bad)">Cancelar agendamento</button>`:""}<button class="btn ghost" id="fcancel">Cancelar</button><button class="btn" id="fsave">Salvar</button></div>`;
   if(p&&p.care)h=h.replace('<div class="frow">',`<div class="carebox"><p><b>${p.care==="risco"?"Risco":"Atenção"}.</b> ${esc(p.careNote||"")}</p></div><div class="frow">`);
-  if(p&&(emName(p)||p.emergPhone))h=h.replace('<p class="hint">Anote o essencial',emergHtml(p,true)+'<p class="hint">Anote o essencial');
+  if(p&&(emName(p)||p.emergPhone))h=h.replace('<i class="emk" hidden></i>',emergHtml(p,true));
   showSheet(h);
   const vis=()=>{const ch=$("#f_charge").checked;$("#chargeRow").hidden=!ch;$("#paidRow").hidden=!ch};
   const sync=first=>{
@@ -1854,22 +1851,40 @@ function demoData(){
 }
 
 /* ---------- eventos ---------- */
-const navState=()=>({v:ui.view,pid:ui.pid,ptab:ui.ptab});
-function navPush(){try{history.replaceState(Object.assign({},history.state||{},{y:window.scrollY}),"");history.pushState(navState(),"")}catch(e){}}
+const navState=()=>({v:ui.view,pid:ui.pid,ptab:ui.ptab,pf:ui.pf,lf:ui.lf});
+const VSLUG={hoje:"meu-dia",config:"configuracoes"},PTS={sessoes:"sessoes",tempo:"linha-do-tempo",ficha:"ficha",escalas:"escalas",fin:"pagamentos"},
+  PFS={ativo:"ativos",pausado:"pausados",alta:"alta",encerrado:"encerrados",todos:"todos"},LFS={pendentes:"pendentes",espera:"lista-de-espera",agendado:"agendados",desistiu:"nao-seguiram",todos:"todos"};
+const invO=o=>Object.fromEntries(Object.entries(o).map(([a,b])=>[b,a]));
+function routeHash(st){st=st||navState();const v=st.v||"inicio";let h="#/"+(VSLUG[v]||v);
+  if(v==="paciente")h+="/"+encodeURIComponent(st.pid||"")+"/"+(PTS[st.ptab]||"sessoes");
+  else if(v==="pacientes")h+="/"+(PFS[st.pf]||"ativos");
+  else if(v==="contatos")h+="/"+(LFS[st.lf]||"pendentes");
+  return h}
+function parseHash(h){h=(h||"").replace(/^#\/?/,"");if(!h)return null;let a;try{a=h.split("/").map(decodeURIComponent)}catch(e){return null}
+  const v=invO(VSLUG)[a[0]]||a[0];
+  if(v==="paciente")return a[1]?{v,pid:a[1],ptab:invO(PTS)[a[2]]||"sessoes"}:{v:"pacientes"};
+  if(!NAV.some(x=>x[0]===v))return null;const st={v};
+  if(v==="pacientes"&&invO(PFS)[a[1]])st.pf=invO(PFS)[a[1]];
+  if(v==="contatos"&&invO(LFS)[a[1]])st.lf=invO(LFS)[a[1]];
+  return st}
+function hpush(st){st=st||navState();try{history.pushState(st,"",routeHash(st))}catch(e){try{history.pushState(st,"")}catch(x){}}}
+function hset(st){st=st||Object.assign(navState(),{y:window.scrollY});try{history.replaceState(st,"",routeHash(st))}catch(e){try{history.replaceState(st,"")}catch(x){}}}
+function applyRoute(st){if(!st)return;ui.view=st.v;if(st.pid)ui.pid=st.pid;if(st.ptab)ui.ptab=st.ptab;if(st.pf)ui.pf=st.pf;if(st.lf)ui.lf=st.lf}
+function navPush(){try{history.replaceState(Object.assign({},history.state||{},{y:window.scrollY}),"")}catch(e){}hpush()}
 function go(v,fromPop,y){const same=ui.view===v&&v!=="paciente";if(!fromPop&&!$("#scrim").hidden){$("#scrim").hidden=true;$("#sheet").innerHTML="";document.body.classList.remove("modal");window.scrollTo(0,ui.sheetY||0)}
   ui.view=v;if(v!=="paciente")try{localStorage.setItem("painel-mi-view2",v)}catch(e){}closeSheet();if(!fromPop&&!same)navPush();
   if(!fromPop&&!same)ui.enter=true;render();const ty=fromPop?(y||0):(same?window.scrollY:0);window.scrollTo(0,ty);requestAnimationFrame(()=>window.scrollTo(0,ty));setTimeout(()=>window.scrollTo(0,ty),60)}
 let exitArm=0;
 window.addEventListener("popstate",e=>{
   if(e.state&&e.state.guard){
-    if(!$("#live").hidden||!$("#scrim").hidden){closeSheet();if(!$("#live").hidden)minimizeLive();try{history.pushState(navState(),"")}catch(x){}return}
-    if(ui.view!=="inicio"){try{history.pushState({v:"inicio"},"")}catch(x){}return go("inicio",true,0)}
+    if(!$("#live").hidden||!$("#scrim").hidden){closeSheet();if(!$("#live").hidden)minimizeLive();try{hpush()}catch(x){}return}
+    if(ui.view!=="inicio"){try{hpush({v:"inicio"})}catch(x){}return go("inicio",true,0)}
     if(Date.now()-exitArm<2500){history.back();return}
-    const yk=window.scrollY;exitArm=Date.now();toast("Toque em voltar de novo para sair");try{history.pushState(navState(),"")}catch(x){}window.scrollTo(0,yk);requestAnimationFrame(()=>window.scrollTo(0,yk));return}
-  if(!$("#live").hidden){minimizeLive();try{history.pushState(navState(),"")}catch(x){}return}
-  if(!$("#scrim").hidden){closeSheet();try{history.pushState(navState(),"")}catch(x){}return}
+    const yk=window.scrollY;exitArm=Date.now();toast("Toque em voltar de novo para sair");try{hpush()}catch(x){}window.scrollTo(0,yk);requestAnimationFrame(()=>window.scrollTo(0,yk));return}
+  if(!$("#live").hidden){minimizeLive();try{hpush()}catch(x){}return}
+  if(!$("#scrim").hidden){closeSheet();try{hpush()}catch(x){}return}
   if(!$("#results").hidden){$("#results").hidden=true}
-  const st=e.state||{v:"inicio"};ui.pid=st.pid||ui.pid;ui.ptab=st.ptab||"sessoes";
+  const st=e.state||parseHash(location.hash)||{v:"inicio"};ui.pid=st.pid||ui.pid;ui.ptab=st.ptab||"sessoes";if(st.pf)ui.pf=st.pf;if(st.lf)ui.lf=st.lf;if(!e.state)hset(st);
   if(st.v==="paciente"&&!P(ui.pid))return go("pacientes",true);
   go(st.v||"inicio",true,st.y);
 });
@@ -1894,11 +1909,11 @@ document.addEventListener("click",e=>{
   if(D.day){ui.sel=D.day;const d=parse(D.day);ui.calM=d.getMonth();ui.calY=d.getFullYear();return render()}
   if(D.wk){ui.sel=addD(ui.sel,+D.wk);const d=parse(ui.sel);ui.calM=d.getMonth();ui.calY=d.getFullYear();return render()}
   if(D.fm){ui.fm=madd(ui.fm,+D.fm);return render()}
-  if(D.pf){ui.pf=D.pf;ui.sk.pac=null;return render()}
+  if(D.pf){if(ui.pf===D.pf)return;ui.pf=D.pf;ui.sk.pac=null;navPush();return render()}
   if(D.psort){const k=D.psort;ui.ps=ui.ps&&ui.ps.k===k?{k,d:-ui.ps.d}:{k,d:1};ui.sk.pac=null;return render()}
   if(D.popen){ui.pfil.open=!ui.pfil.open;ui.sk.pac=null;return render()}
   if(D.pclear){ui.pfil={freq:"",mode:"",plan:"",day:"",open:false};ui.pq="";ui.sk.pac=null;return render()}
-  if(D.lf){ui.lf=D.lf;return render()}
+  if(D.lf){if(ui.lf===D.lf)return;ui.lf=D.lf;navPush();return render()}
   if(D.ptab){if(ui.ptab===D.ptab)return;ui.ptab=D.ptab;navPush();ui.enter=true;return render()}
   if(D.reactivate){const[rpid,rl]=D.reactivate.split("|");const p=P(rpid);const ld=rl&&S.leads.find(x=>x.id===rl);if(ld)ld.status="agendado";p.status="ativo";if(!p.anchor||p.anchor<TODAY())p.anchor="";closeSheet();save();toast("Paciente reativado. Defina o novo horário fixo.");return openForm("patient",p.id)}
   if(D.pk!==undefined){pinKey(D.pk);return}
@@ -2004,7 +2019,8 @@ function applyTheme(t){if(t)document.documentElement.setAttribute("data-theme",t
 const local=lsGet();if(local)S=norm(local);
 try{const t0=localStorage.getItem("painel-mi-theme");if(t0&&(!local||local.theme===undefined))S.theme=t0}catch(e){}
 try{history.scrollRestoration="manual"}catch(e){}
-try{history.replaceState({guard:1},"");history.pushState(navState(),"")}catch(e){}
+applyRoute(parseHash(location.hash));
+try{history.replaceState({guard:1},"",location.pathname+location.search)}catch(e){try{history.replaceState({guard:1},"")}catch(x){}}hpush();
 try{const lv=JSON.parse(localStorage.getItem("painel-mi-live")||"null");if(lv&&lv.date===TODAY())ui.live=lv;else localStorage.removeItem("painel-mi-live")}catch(e){}
 window.__acct=acct;
 window.__onAcct=()=>{if(window.__acctState&&acct.state!==window.__acctState[0])Object.assign(acct,{state:window.__acctState[0]},window.__acctState[1]||{});
