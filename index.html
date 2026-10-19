@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Rietz Psicologia</title>
+<title>Rietz Psi</title>
 <meta name="description" content="Painel de gestão da Rietz Psicologia">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
@@ -13,7 +13,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Rietz">
+<meta name="apple-mobile-web-app-title" content="Rietz Psi">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>
 /* compatibilidade: downloads no navegador */
@@ -58,7 +58,6 @@ window.fbReady=new Promise(res=>{window.__fbResolve=res});
 </head>
 <body>
 <meta name="theme-color" content="#8D6B84">
-<meta name="apple-mobile-web-app-title" content="Rietz">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1512,7 +1511,7 @@ function installBtnHtml(){if(isStandalone())return "";return `<button class="btn
 function bindInstall(root){(root||document).querySelectorAll("[data-install]").forEach(b=>b.onclick=doInstall)}
 async function doInstall(){
   if(deferredInstall){deferredInstall.prompt();const r=await deferredInstall.userChoice.catch(()=>null);deferredInstall=null;if(r&&r.outcome==="accepted")toast("Instalando o app");return}
-  if(isIOS()){showSheet(`<h2>Baixar o app no iPhone</h2><p class="hint">No Safari, toque no botão Compartilhar (o quadrado com a seta para cima) e escolha <b>Adicionar à Tela de Início</b>. O ícone da Rietz aparece junto dos seus apps.</p><div class="actions"><button class="btn" id="pclose">Entendi</button></div>`);$("#pclose").onclick=closeSheet;return}
+  if(isIOS()){showSheet(`<h2>Baixar o app no iPhone</h2><p class="hint">No Safari, toque no botão Compartilhar (o quadrado com a seta para cima) e escolha <b>Adicionar à Tela de Início</b>. O ícone do Rietz Psi aparece junto dos seus apps.</p><div class="actions"><button class="btn" id="pclose">Entendi</button></div>`);$("#pclose").onclick=closeSheet;return}
   toast("Abra pelo Chrome e use o menu ⋮ > Instalar app");
 }
 function openAcct(){
