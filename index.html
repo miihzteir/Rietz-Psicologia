@@ -1663,10 +1663,15 @@ function render(){
   if(ui.enter){ui.enter=false;el.classList.remove("enter");void el.offsetWidth;el.classList.add("enter");clearTimeout(render._t);render._t=setTimeout(()=>el.classList.remove("enter"),900)}
   if(ui.flash){document.querySelectorAll(ui.flash).forEach(x=>x.classList.add("pop"));ui.flash=null}
   if(Math.abs(window.scrollY-y0)>1)window.scrollTo(0,y0);
-  $("#lockNow").hidden=!S.pin;checkLock();updatePill();
+  $("#lockNow").hidden=!S.pin;checkLock();updatePill();setTitle();
   document.querySelectorAll("[data-sk]").forEach(x=>{const v=ui.sk[x.dataset.sk];if(v){x.scrollTop=v[0];x.scrollLeft=v[1]}});
 }
 
+const APPNAME="Rietz Psi";
+function setTitle(){const g=$("#gate"),l=$("#lock");let t=APPNAME;
+  if((!g||g.hidden)&&(!l||l.hidden)&&ui.view!=="inicio"){const n=ui.view==="paciente"?"Paciente":(NAV.find(x=>x[0]===ui.view)||[])[1];if(n)t=n+" · "+APPNAME}
+  if(document.title!==t)document.title=t}
+try{const mo=new MutationObserver(setTitle);["gate","lock"].forEach(id=>{const e=document.getElementById(id);if(e)mo.observe(e,{attributes:true,attributeFilter:["hidden"]})})}catch(e){}
 /* ---------- formulários ---------- */
 const optsPatients=all=>S.patients.filter(p=>all||p.status==="ativo").sort((a,b)=>a.name.localeCompare(b.name,"pt")).map(p=>[p.id,p.name]);
 const FORMS={
