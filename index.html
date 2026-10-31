@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://apis.google.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://*.googleusercontent.com https://www.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://*.firebaseapp.com https://www.gstatic.com https://cdn.jsdelivr.net; frame-src https://*.firebaseapp.com https://accounts.google.com https://apis.google.com; worker-src 'self'; manifest-src 'self'; media-src 'self' blob: data:; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<script>if(window.top!==window.self){try{window.top.location=window.self.location}catch(e){document.documentElement.style.display="none"}}</script>
 <title>Rietz Psi</title>
 <meta name="description" content="Painel de gestão da Rietz Psicologia">
 <link rel="manifest" href="manifest.json">
@@ -19,9 +22,9 @@
 /* compatibilidade: downloads no navegador */
 window.claude={use:async n=>n==="downloads"?{save:async({filename,data})=>{const blob=data instanceof Blob?data:new Blob([data]);const u=URL.createObjectURL(blob);const a=document.createElement("a");a.href=u;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);return {}}}:null};
 </script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore-compat.js"></script>
 <script src="config.js"></script>
 <script>
 /* Firebase: login Google + nuvem compartilhada entre as contas autorizadas */
@@ -30,7 +33,7 @@ window.fbReady=new Promise(res=>{window.__fbResolve=res});
   const cfg=window.FIREBASE_CONFIG,allow=(window.CONTAS_AUTORIZADAS||[]).map(x=>x.toLowerCase().trim());
   const set=(st,extra)=>{const A=window.__acct;if(A){Object.assign(A,{state:st},extra||{})}window.__acctState=[st,extra];window.__onAcct&&window.__onAcct()};
   if(!cfg||!cfg.apiKey||!window.firebase){set("nocfg");window.__fbResolve(null);return}
-  firebase.initializeApp(cfg);const auth=firebase.auth(),db=firebase.firestore();window.fbAuth=auth;
+  firebase.initializeApp(cfg);const auth=firebase.auth(),db=firebase.firestore();window.fbAuth=auth;window.fbDb=db;
   try{db.enablePersistence({synchronizeTabs:true}).catch(()=>{})}catch(e){}
   auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(()=>{});
   let resolved=false,denied=null;
@@ -38,11 +41,12 @@ window.fbReady=new Promise(res=>{window.__fbResolve=res});
   auth.onAuthStateChanged(u=>{
     if(!u){if(denied){const d=denied;denied=null;set("denied",d)}else set("out");return}
     const em=(u.email||"").toLowerCase();
-    if(!allow.includes(em)){denied={email:u.email,name:u.displayName||"",avatar:u.photoURL||""};auth.signOut();return}
+    const viaGoogle=(u.providerData||[]).some(p=>p&&p.providerId==="google.com");
+    if(!allow.includes(em)||!u.emailVerified||!viaGoogle){denied={email:u.email,name:u.displayName||"",avatar:u.photoURL||""};auth.signOut();return}
     set("ok",{email:u.email,name:u.displayName||"",avatar:u.photoURL||""});
     if(!resolved){resolved=true;window.__fbResolve(db)}
   });
-  window.fbErr=e=>({"auth/unauthorized-domain":"Este endereço ainda não está autorizado no Firebase (Authentication > Configurações > Domínios autorizados).","auth/popup-closed-by-user":"A janela do Google foi fechada antes de terminar.","auth/network-request-failed":"Sem internet. Confira a conexão e tente de novo.","auth/operation-not-allowed":"O login com Google ainda não foi ativado no Firebase.","auth/web-storage-unsupported":"O navegador está bloqueando o armazenamento. Desative a navegação anônima ou o bloqueio de cookies e tente de novo.","auth/internal-error":"O Google não respondeu. Feche e abra o app de novo e tente outra vez.","auth/too-many-requests":"Muitas tentativas seguidas. Espere um minuto e tente de novo."}[e&&e.code]||("Não consegui entrar: "+((e&&e.message)||"erro desconhecido")));
+  window.fbErr=e=>({"auth/unauthorized-domain":"Este endereço não está liberado para entrar.","auth/popup-closed-by-user":"A janela do Google foi fechada antes de terminar.","auth/network-request-failed":"Sem internet. Confira a conexão e tente de novo.","auth/operation-not-allowed":"O login com Google ainda não foi ativado no Firebase.","auth/web-storage-unsupported":"O navegador está bloqueando o armazenamento. Desative a navegação anônima ou o bloqueio de cookies e tente de novo.","auth/internal-error":"O Google não respondeu. Feche e abra o app de novo e tente outra vez.","auth/too-many-requests":"Muitas tentativas seguidas. Espere um minuto e tente de novo."}[e&&e.code]||(console.warn("login",e&&e.code),"Não consegui entrar agora. Tente de novo em instantes."));
   const inApp=/FBAN|FBAV|Instagram|WhatsApp|Line\/|; wv\)|WebView|GSA\//i.test(navigator.userAgent);
   window.fbSignIn=async()=>{
     if(inApp){set("error",{err:"Este navegador interno não permite entrar com Google. Abra o endereço no Chrome ou no Safari."});return}
@@ -692,9 +696,9 @@ table.pt{width:100%;border-collapse:separate;border-spacing:0;min-width:820px;fo
 <button class="livepill" id="livePill" hidden></button>
 <div class="lock" id="lock" hidden></div>
 <div class="lock gate" id="gate"><div class="lk"><p>Carregando…</p></div></div>
-<input type="file" id="photoIn" accept="image/*" hidden>
+<input type="file" id="photoIn" accept="image/jpeg,image/png,image/webp,image/gif,image/heic" hidden>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@4.2.1/dist/jspdf.umd.min.js"></script>
 <script>
 document.documentElement.lang="pt-BR";
 /* ---------- separação silábica (quebra com hífen no lugar certo) ---------- */
@@ -1528,7 +1532,7 @@ function acctCard(){const nm=acct.name||S.display||S.name;return `<div class="ac
 function renderGate(){
   const G=$("#gate");if(gateOK){G.hidden=true;return}
   const st=acct.state;
-  const msg={checking:"Verificando a sua conta",out:"Entre com a sua conta Google para ver pacientes, agenda e financeiro.",denied:"A conta "+(acct.email||"")+" não tem acesso a este painel. Entre com uma das contas autorizadas.",nocfg:"A conexão com a nuvem ainda não foi configurada.",error:acct.err||"Não consegui entrar agora. Tente de novo."}[st]||"";
+  const msg={checking:"Verificando a sua conta",out:(()=>{try{return sessionStorage.getItem("painel-msg")}catch(e){return ""}})()||"Entre com a sua conta Google para ver pacientes, agenda e financeiro.",denied:"A conta "+(acct.email||"")+" não tem acesso a este painel. Entre com uma das contas autorizadas.",nocfg:"A conexão com a nuvem ainda não foi configurada.",error:acct.err||"Não consegui entrar agora. Tente de novo."}[st]||"";
   G.innerHTML=`<div class="lk"><span class="glogo" role="img" aria-label="Rietz Psicologia"></span><p>${esc(msg)}</p>
   ${st==="checking"?`<button class="btn" disabled style="opacity:.6">Verificando…</button>`:st==="nocfg"?`<button class="btn" id="gateLocal">Usar só neste aparelho</button>`:`<button class="btn" id="gateIn"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#fff" d="M21.6 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.4a4.6 4.6 0 0 1-2 3v2.5h3.2c1.9-1.7 3-4.3 3-7.3z"/><path fill="#fff" opacity=".85" d="M12 22c2.7 0 5-.9 6.6-2.4l-3.2-2.5c-.9.6-2 1-3.4 1-2.6 0-4.8-1.8-5.6-4.1H3.1v2.6A10 10 0 0 0 12 22z"/><path fill="#fff" opacity=".7" d="M6.4 14c-.2-.6-.3-1.3-.3-2s.1-1.4.3-2V7.4H3.1a10 10 0 0 0 0 9.2z"/><path fill="#fff" opacity=".55" d="M12 5.9c1.5 0 2.8.5 3.8 1.5l2.9-2.9A10 10 0 0 0 3.1 7.4L6.4 10c.8-2.4 3-4.1 5.6-4.1z"/></svg> ${st==="denied"?"Entrar com outra conta":"Entrar com Google"}</button>`}
   ${installBtnHtml()}</div>`;
@@ -1537,7 +1541,22 @@ function renderGate(){
   if($("#gateLocal"))$("#gateLocal").onclick=()=>{gateOK=true;G.hidden=true;render();checkLock()};
   bindInstall(G);
 }
-function signOut(){gateOK=false;try{sessionStorage.removeItem("painel-unlocked")}catch(e){}unlocked=false;minimizeLive();closeSheet();if(window.fbAuth)fbAuth.signOut();acct.state="out";renderGate()}
+async function signOutWipe(msg){gateOK=false;unlocked=false;try{minimizeLive();closeSheet()}catch(e){}
+  const G=$("#gate");if(G){G.innerHTML=`<div class="lk"><p>Saindo…</p></div>`;G.hidden=false}
+  try{if(window.fbAuth)await fbAuth.signOut()}catch(e){}
+  try{if(window.fbDb){await fbDb.terminate();await fbDb.clearPersistence()}}catch(e){}
+  try{Object.keys(localStorage).filter(k=>/^painel-/.test(k)).forEach(k=>localStorage.removeItem(k))}catch(e){}
+  try{sessionStorage.clear();if(msg)sessionStorage.setItem("painel-msg",msg)}catch(e){}
+  try{if(window.caches){const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}}catch(e){}
+  location.replace(location.pathname)}
+function signOut(){return signOutWipe()}
+async function forgotPinSite(){const u=window.fbAuth&&fbAuth.currentUser;if(!u){return signOutWipe()}
+  try{const p=new firebase.auth.GoogleAuthProvider();p.setCustomParameters({prompt:"select_account",login_hint:u.email||""});await u.reauthenticateWithPopup(p);
+    S.pin="";setFails({n:0,until:0});save();unlock();toast("PIN removido. Crie um novo em Configurações.")}
+  catch(e){const c=e&&e.code;if(c==="auth/popup-closed-by-user"||c==="auth/cancelled-popup-request")return;
+    if(c==="auth/user-mismatch"){toast("Use a mesma conta Google que está conectada.");return}
+    if(c==="auth/popup-blocked"||c==="auth/operation-not-supported-in-this-environment"){toast("Abra o site no Chrome ou no Safari para redefinir o PIN.");return}
+    toast("Não consegui confirmar a sua conta. Tente de novo.")}}
 /* ---------- instalar o app ---------- */
 let deferredInstall=null;
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstall=e;document.querySelectorAll("[data-install]").forEach(b=>b.hidden=false)});
@@ -1559,26 +1578,45 @@ function openAcct(){
   ${installBtnHtml()?`<div class="actions" style="justify-content:flex-start">${installBtnHtml()}</div>`:""}
   <div class="actions" style="justify-content:space-between"><button class="btn ghost" id="acOut">Sair</button><span style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" data-go="config">Configurações</button><button class="btn" id="pclose">Fechar</button></span></div>`);
   setSync();bindInstall($("#sheet"));
-  $("#pclose").onclick=closeSheet;$("#acOut").onclick=()=>confirmBox("Sair do painel?","Você sai da conta Google neste aparelho. Os dados continuam salvos na nuvem.","Sair",signOut);
+  $("#pclose").onclick=closeSheet;$("#acOut").onclick=()=>confirmBox("Sair do painel?","Você sai da conta neste aparelho e as cópias locais dos dados são apagadas. Tudo continua salvo na nuvem.","Sair",signOut);
   $("#phPick").onclick=()=>$("#photoIn").click();
   if($("#phAcct"))$("#phAcct").onclick=()=>{S.photo="";S.photoMode="account";save();openAcct();toast("Usando a foto do Google")};
   if($("#phDel"))$("#phDel").onclick=()=>{S.photo="";S.photoMode="";save();openAcct();toast("Foto removida")};
 }
 $("#photoIn").addEventListener("change",e=>{const f=e.target.files&&e.target.files[0];e.target.value="";if(!f)return;
-  if(!/^image\//.test(f.type)){toast("Escolha um arquivo de imagem.");return}
+  if(!/^image\/(jpeg|png|webp|gif|heic|heif)$/.test(f.type)){toast("Escolha uma foto em JPG, PNG ou WEBP.");return}
+  if(f.size>15*1024*1024){toast("A foto passa de 15 MB. Escolha uma menor.");return}
   const rd=new FileReader();rd.onload=()=>{const img=new Image();img.onload=()=>{const N=320,c=document.createElement("canvas");c.width=c.height=N;const x=c.getContext("2d"),m=Math.min(img.width,img.height);
     x.drawImage(img,(img.width-m)/2,(img.height-m)/2,m,m,0,0,N,N);S.photo=c.toDataURL("image/jpeg",.85);S.photoMode="";save();if(!$("#scrim").hidden)openAcct();toast("Foto de perfil atualizada")};
     img.onerror=()=>toast("Não consegui abrir essa imagem.");img.src=rd.result};rd.readAsDataURL(f)});
 /* ---------- PIN ---------- */
-async function sha(t){try{const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("essentia:"+t));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}catch(e){let h=0;for(const c of "essentia:"+t)h=(h*31+c.charCodeAt(0))|0;return "x"+h}}
+async function sha(t){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("essentia:"+t));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+const hex=u=>[...u].map(x=>x.toString(16).padStart(2,"0")).join(""),unhex=h=>new Uint8Array(h.match(/../g).map(x=>parseInt(x,16)));
+async function pbk(pin,salt,it){const k=await crypto.subtle.importKey("raw",new TextEncoder().encode(pin),"PBKDF2",false,["deriveBits"]);return hex(new Uint8Array(await crypto.subtle.deriveBits({name:"PBKDF2",hash:"SHA-256",salt,iterations:it},k,256)))}
+async function pinHash(pin){const salt=crypto.getRandomValues(new Uint8Array(16)),it=210000;return `p2$${pin.length}$${it}$${hex(salt)}$${await pbk(pin,salt,it)}`}
+async function pinCheck(pin,stored){if(!stored)return false;if(stored.startsWith("p2$")){const[,len,it,salt,h]=stored.split("$");if(pin.length!==+len)return false;return (await pbk(pin,unhex(salt),+it))===h}return (await sha(pin))===stored}
+const pinLen=()=>S.pin&&S.pin.startsWith("p2$")?+S.pin.split("$")[1]:0;
+const PINF="painel-pin-falhas";const pinFails=()=>{try{return JSON.parse(localStorage.getItem(PINF)||"null")||{n:0,until:0}}catch(e){return {n:0,until:0}}};const setFails=o=>{try{localStorage.setItem(PINF,JSON.stringify(o))}catch(e){}};
+const PIN_MAX=10;function pinWait(n){return n<5?0:[30,60,120,300,600][Math.min(n-5,4)]*1000}
+function pinLockedMsg(){const f=pinFails(),ms=f.until-Date.now();if(ms<=0)return "";const m=Math.ceil(ms/1000);return `Muitas tentativas. Aguarde ${m>=60?Math.ceil(m/60)+" min":m+" s"}.`}
+function pinTooMany(){/* site: sai da conta e apaga os dados deste aparelho */if(typeof signOutWipe==="function")return signOutWipe("Muitas tentativas de PIN. Entre de novo com a sua conta Google.");setFails({n:0,until:Date.now()+15*60*1000});showLock("Muitas tentativas. Aguarde 15 minutos.")}
 let unlocked=(()=>{try{return sessionStorage.getItem("painel-unlocked")==="1"}catch(e){return false}})(),lastAct=Date.now(),pinBuf="";
 function checkLock(){if(!gateOK)return;if(!S.pin){$("#lock").hidden=true;return}if(!unlocked&&$("#lock").hidden)showLock()}
 function showLock(msg){const L=$("#lock");L.innerHTML=`<div class="lk" id="lkbox">${photoUrl()?avHtml(72):""}<span class="bmark" ${photoUrl()?"hidden":""}>${''}</span><h2>${esc(S.clinic||"rietz")}</h2><p id="lkmsg">${msg||"Digite seu PIN para entrar"}</p><div class="dots" id="lkdots"></div><div class="pad">${[1,2,3,4,5,6,7,8,9,"",0,"⌫"].map(k=>k===""?"<span></span>":`<button data-pk="${k}" aria-label="${k==="⌫"?"Apagar":k}">${k}</button>`).join("")}</div><button class="more" id="lkforgot" style="align-self:center">Esqueci o PIN</button></div>`;L.hidden=false;pinBuf="";drawDots();
   $("#lkforgot").onclick=()=>{$("#lkbox").innerHTML=`<h2>Redefinir PIN</h2><p>Digite seu nome completo, como está no seu perfil, para remover o PIN.</p><div class="field" style="width:100%"><input id="lkname" autocomplete="off"></div><button class="btn" id="lkreset">Remover PIN</button><button class="more" id="lkback" style="align-self:center">Voltar</button>`;
-    $("#lkreset").onclick=()=>{if(normName($("#lkname").value)===normName(S.name)){S.pin="";save();unlock();toast("PIN removido. Crie um novo em Configurações.")}else{toast("O nome não confere.")}};$("#lkback").onclick=()=>showLock()}}
+    $("#lkreset").onclick=()=>{const lm=pinLockedMsg();if(lm){toast(lm);return}if(normName($("#lkname").value)===normName(S.name)){S.pin="";setFails({n:0,until:0});save();unlock();toast("PIN removido. Crie um novo em Configurações.")}else{const f=pinFails();f.n++;f.until=Date.now()+pinWait(f.n);setFails(f);if(f.n>=PIN_MAX)return pinTooMany();toast("O nome não confere.")}};$("#lkback").onclick=()=>showLock()}
+  if(typeof forgotPinSite==="function")$("#lkforgot").onclick=forgotPinSite;
+  const lm=pinLockedMsg();if(lm)$("#lkmsg").textContent=lm}
 function drawDots(){const d=$("#lkdots");if(d)d.innerHTML=[...Array(Math.max(4,pinBuf.length))].map((_,i)=>`<i class="${i<pinBuf.length?"on":""}"></i>`).join("")}
-async function pinKey(k){if(k==="⌫")pinBuf=pinBuf.slice(0,-1);else if(pinBuf.length<6)pinBuf+=k;drawDots();
-  if(pinBuf.length>=4){const h=await sha(pinBuf);if(h===S.pin){unlock();return}if(pinBuf.length===6){const b=$("#lkbox");b.classList.remove("shake");void b.offsetWidth;b.classList.add("shake");$("#lkmsg").textContent="PIN incorreto. Tente de novo.";pinBuf="";drawDots()}}}
+let pinBusy=false;
+async function pinKey(k){if(pinBusy)return;const lm=pinLockedMsg();if(lm){$("#lkmsg").textContent=lm;pinBuf="";drawDots();return}
+  if(k==="⌫")pinBuf=pinBuf.slice(0,-1);else if(pinBuf.length<6)pinBuf+=k;drawDots();
+  const L=pinLen(),full=L?pinBuf.length===L:pinBuf.length>=4;if(!full)return;
+  pinBusy=true;let ok=false;try{ok=await pinCheck(pinBuf,S.pin)}catch(e){ok=false}pinBusy=false;
+  if(ok){const p=pinBuf;setFails({n:0,until:0});if(!L){try{S.pin=await pinHash(p);save()}catch(e){}}unlock();return}
+  if(L||pinBuf.length===6){const f=pinFails();f.n++;f.until=Date.now()+pinWait(f.n);setFails(f);
+    if(f.n>=PIN_MAX){pinBuf="";return pinTooMany()}
+    const b=$("#lkbox");b.classList.remove("shake");void b.offsetWidth;b.classList.add("shake");$("#lkmsg").textContent=pinLockedMsg()||`PIN incorreto. ${PIN_MAX-f.n<=5?"Restam "+(PIN_MAX-f.n)+" tentativas.":"Tente de novo."}`;pinBuf="";drawDots()}}
 function unlock(){unlocked=true;try{sessionStorage.setItem("painel-unlocked","1")}catch(e){}$("#lock").hidden=true;pinBuf="";lastAct=Date.now()}
 function lockNow(msg){unlocked=false;try{sessionStorage.removeItem("painel-unlocked")}catch(e){}minimizeLive();closeSheet();showLock(msg)}
 function vContatos(){
@@ -1742,13 +1780,15 @@ const FORMS={
   extra:{title:"agendamento",coll:"extras",fields:[{k:"pid",l:"Paciente",t:"select",req:1,o:()=>optsPatients(false)},{k:"date",l:"Data",t:"date",req:1},{k:"time",l:"Horário",t:"time",req:1},{k:"note",l:"Observação",t:"text"}]}
 };
 const nf2=f=>Array.isArray(f)?{k:f[0],l:f[1],t:f[2]}:f;
+const validDate=v=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(v))return false;const y=+v.slice(0,4);if(y<1900||y>2100)return false;const d=new Date(v+"T12:00:00");return !isNaN(d)&&d.toISOString().slice(0,10)===v};
+const validCPF=v=>{const d=String(v).replace(/\D/g,"");if(d.length!==11||/^(\d)\1{10}$/.test(d))return false;const c=n=>{let s=0;for(let i=0;i<n;i++)s+=+d[i]*(n+1-i);const r=s*10%11%10;return r===+d[n]};return c(9)&&c(10)};
 function fieldHtml(f,val){
   const id="f_"+f.k,t=f.t||"text";
-  if(t==="textarea")return `<div class="field"><label for="${id}">${f.l}</label><textarea id="${id}">${esc(val)}</textarea></div>`;
+  if(t==="textarea")return `<div class="field"><label for="${id}">${f.l}</label><textarea id="${id}" maxlength="20000">${esc(val)}</textarea></div>`;
   if(t==="check")return `<label class="chk"><input type="checkbox" id="${id}" ${val?"checked":""}> ${f.l}</label>`;
   if(t==="plist")return `<div class="field"><label for="${id}">${f.l}</label><input id="${id}" list="dl_${id}" value="${esc(val)}" placeholder="Digite ou escolha um paciente"><datalist id="dl_${id}">${S.patients.map(p=>`<option value="${esc(p.name)}"></option>`).join("")}</datalist></div>`;
   if(t==="select"){const os=f.o();if(val&&!os.some(o=>String(o[0])===String(val)))os.push([val,val]);return `<div class="field"><label for="${id}">${f.l}</label><select id="${id}">${os.map(([a,b])=>`<option value="${esc(a)}" ${String(val??"")===String(a)?"selected":""}>${esc(b)}</option>`).join("")}</select></div>`}
-  return `<div class="field"><label for="${id}">${f.l}</label><input id="${id}" type="${t}" ${t==="number"?'step="any" inputmode="decimal"':""} value="${esc(val)}" ${f.req?"required":""}></div>`;
+  return `<div class="field"><label for="${id}">${f.l}</label><input id="${id}" type="${t}" ${t==="number"?'step="any" inputmode="decimal" min="0" max="1000000"':`maxlength="300"`} value="${esc(val)}" ${f.req?"required":""}></div>`;
 }
 function openForm(kind,id,preset){
   if(["pick","menu","pick-rot"].includes(kind))return openPicker(kind);
@@ -1786,12 +1826,19 @@ function submit(F,it,preset){
   const o=it?{...it}:{id:uid(),at:Date.now()};let err="";
   F.fields.forEach(f0=>{if(f0.sec)return;const f=nf2(f0);const el=$("#f_"+f.k);let v=f.t==="check"?el.checked:el.value.trim();
     if(f.req&&v==="")err=err||`Preencha "${f.l}".`;
-    if(f.t==="number"&&v!=="")v=Number(String(v).replace(",","."));o[f.k]=v});
+    if(typeof v==="string"&&v.length>(f.t==="textarea"?20000:300))err=err||`"${f.l}" ficou longo demais.`;
+    if(f.t==="number"&&v!==""){v=Number(String(v).replace(",","."));if(!isFinite(v)||v<0||v>1e6)err=err||`Valor inválido em "${f.l}".`}
+    if(f.t==="date"&&v!==""&&!validDate(v))err=err||`Data inválida em "${f.l}".`;
+    if(f.t==="time"&&v!==""&&!/^([01]\d|2[0-3]):[0-5]\d$/.test(v))err=err||`Horário inválido em "${f.l}".`;
+    if(f.t==="email"&&v!==""&&!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v))err=err||"E-mail inválido.";
+    if(f.t==="tel"&&v!==""){const d=v.replace(/\D/g,"");if(d.length<8||d.length>13)err=err||`Telefone inválido em "${f.l}".`}
+    if(f.k==="cpf"&&v!==""&&!validCPF(v))err=err||"CPF inválido. Confira os números.";
+    o[f.k]=v});
   if(F.coll==="plans"&&!(o.value>0))err=err||"Informe um valor maior que zero.";
   if(F.coll==="expenses"&&!(o.v>0))err=err||"Informe um valor maior que zero.";
   if(F.coll==="scales"){if(o.scale==="Outro"&&!o.other)err=err||"Informe o nome do instrumento.";const sc=SCALES[o.scale];if(!(o.score>=0)||(sc&&o.score>sc.max))err=err||(sc?`A pontuação do ${o.scale} vai de 0 a ${sc.max}.`:"Informe uma pontuação válida.")}
   if(F.coll==="patients"&&o.freq!=="avulso"&&o.status==="ativo"&&(!o.anchor||!o.time))err=err||"Para frequência fixa, informe a data da 1ª sessão e o horário.";
-  if(err){const e=$("#ferr");e.textContent=err;e.hidden=false;return}
+  if(err){const e=$("#ferr");e.textContent=err;e.hidden=false;try{e.scrollIntoView({block:"center",behavior:"smooth"})}catch(x){}return}
   if(F.coll==="habits"&&!it)o.days={};
   if(F.coll==="patients")delete o.emerg;
   if(it)S[F.coll]=S[F.coll].map(x=>x.id===it.id?o:x);else S[F.coll].push(o);
@@ -1854,7 +1901,10 @@ function openSession(pid,date){
     if(S.records.find(r=>r.pid===npid&&r.date===nd&&r!==ex))err=err||"Já existe um registro deste paciente nesta data. Abra o registro existente para editar.";
     const ndv=$("#f_nd").value;const ch=s!=="remarcada"&&$("#f_charge").checked,v=Number(String($("#f_value").value).replace(",","."))||0;
     if(ch&&!(v>0))err=err||"Informe o valor da sessão ou desmarque a cobrança.";
-    if(err){$("#ferr").textContent=err;$("#ferr").hidden=false;return}
+    if(ch&&v>1e6)err=err||"Valor da sessão inválido.";
+    if(!validDate(nd))err=err||"Data inválida.";
+    if($("#f_note").value.length>20000)err=err||"O registro ficou longo demais.";
+    if(err){$("#ferr").textContent=err;$("#ferr").hidden=false;try{$("#ferr").scrollIntoView({block:"center",behavior:"smooth"})}catch(x){};return}
     const r=ex||{id:uid()};Object.assign(r,{pid:npid,date:nd,time:$("#f_time").value,status:s,note:$("#f_note").value.trim(),charge:ch,value:ch?v:0,paid:ch&&$("#f_paid").checked,method:$("#f_method").value});
     if(r.paid&&!r.payDate)r.payDate=TODAY();if(!r.paid)delete r.payDate;
     if(!ex)S.records.push(r);
@@ -2013,8 +2063,8 @@ document.addEventListener("click",e=>{
   if(D.pront){closeSheet();return exportPront(D.pront)}
   if(D.alta)return openDischarge(D.alta);
   if(D.pacq){ui.pid=D.pacq;ui.ptab="sessoes";ui.rq=$("#q").value.trim();$("#results").hidden=true;$("#q").value="";return go("paciente")}
-  if(D.pinset){const a1=$("#pin1").value,a2=$("#pin2").value;if(!/^\d{4,6}$/.test(a1)){toast("O PIN precisa ter de 4 a 6 números.");return}if(a1!==a2){toast("Os dois PINs não são iguais.");return}
-    sha(a1).then(h=>{S.pin=h;S.lockMin=+$("#cfLock").value;unlock();save();toast("PIN ativado")});return}
+  if(D.pinset){const a1=$("#pin1").value,a2=$("#pin2").value;if(!/^\d{4,6}$/.test(a1)){toast("O PIN precisa ter de 4 a 6 números.");return}if(/^(\d)\1+$/.test(a1)||"0123456789".includes(a1)||"9876543210".includes(a1)){toast("Escolha um PIN menos óbvio, sem números repetidos ou em sequência.");return}if(a1!==a2){toast("Os dois PINs não são iguais.");return}
+    pinHash(a1).then(h=>{S.pin=h;S.lockMin=+$("#cfLock").value;setFails({n:0,until:0});unlock();save();toast("PIN ativado")}).catch(()=>toast("Este navegador não permite criar o PIN com segurança."));return}
   if(D.pinoff){confirmBox("Remover o PIN?","O painel vai abrir sem pedir código.","Remover",()=>{S.pin="";save();toast("PIN removido")},true);return}
   if(D.locknow){lockNow();return}
   if(D.conf){S.confirm=S.confirm||{};const c=S.confirm[D.conf]||{};c.ok=!c.ok;S.confirm[D.conf]=c;ui.flash=`[data-conf="${D.conf}"]`;save();toast(c.ok?"Sessão confirmada":"Confirmação desfeita");return}
