@@ -809,7 +809,7 @@ const ui={sk:{},ry:new Date().getFullYear(),view:"inicio",pid:null,ptab:"sessoes
 const norm=o=>{const b=BLANK();o=o||{};for(const k in b){if(o[k]!==undefined)b[k]=o[k]};if(!b.clinic||b.clinic==="Essentia")b.clinic="Rietz";return JSON.parse(JSON.stringify(b))};
 function lsGet(){try{const r=localStorage.getItem("painel-mi-clinica");return r?JSON.parse(r):null}catch(e){return null}}
 function lsSet(){try{localStorage.setItem("painel-mi-clinica",JSON.stringify(S))}catch(e){}}
-try{const v=localStorage.getItem("painel-mi-view2");if(v&&NAV.some(x=>x[0]===v))ui.view=v}catch(e){}
+try{localStorage.removeItem("painel-mi-view2")}catch(e){}
 
 function splitYears(){const y={};S.records.forEach(r=>{const k=(r.date||"0000-00").slice(0,7);(y[k]=y[k]||[]).push(r)});Object.keys(lastYears).forEach(k=>{if(!y[k])y[k]=[]});return y}
 async function flush(){
@@ -2002,7 +2002,7 @@ function hset(st){st=st||Object.assign(navState(),{y:window.scrollY});try{histor
 function applyRoute(st){if(!st)return;ui.view=st.v;if(st.pid)ui.pid=st.pid;if(st.ptab)ui.ptab=st.ptab;if(st.pf)ui.pf=st.pf;if(st.lf)ui.lf=st.lf}
 function navPush(){try{history.replaceState(Object.assign({},history.state||{},{y:window.scrollY}),"")}catch(e){}hpush()}
 function go(v,fromPop,y){const same=ui.view===v&&v!=="paciente";if(!fromPop&&!$("#scrim").hidden){$("#scrim").hidden=true;$("#sheet").innerHTML="";document.body.classList.remove("modal");window.scrollTo(0,ui.sheetY||0)}
-  ui.view=v;if(v!=="paciente")try{localStorage.setItem("painel-mi-view2",v)}catch(e){}closeSheet();if(!fromPop&&!same)navPush();
+  ui.view=v;closeSheet();if(!fromPop&&!same)navPush();
   if(!fromPop&&!same)ui.enter=true;render();const ty=fromPop?(y||0):(same?window.scrollY:0);window.scrollTo(0,ty);requestAnimationFrame(()=>window.scrollTo(0,ty));setTimeout(()=>window.scrollTo(0,ty),60)}
 let exitArm=0;
 window.addEventListener("popstate",e=>{
@@ -2156,7 +2156,10 @@ function applyTheme(t){if(t)document.documentElement.setAttribute("data-theme",t
 const local=lsGet();if(local)S=norm(local);
 try{const t0=localStorage.getItem("painel-mi-theme");if(t0&&(!local||local.theme===undefined))S.theme=t0}catch(e){}
 try{history.scrollRestoration="manual"}catch(e){}
-applyRoute(parseHash(location.hash));
+{const appMode=(()=>{try{return matchMedia("(display-mode: standalone)").matches||navigator.standalone===true}catch(e){return false}})();
+  if(appMode)ui.view="inicio";else applyRoute(parseHash(location.hash))}
+let hiddenAt=0;document.addEventListener("visibilitychange",()=>{if(document.hidden){hiddenAt=Date.now();return}
+  if(hiddenAt&&Date.now()-hiddenAt>15*60*1000&&ui.view!=="inicio"&&$("#scrim").hidden&&$("#live").hidden&&!(document.activeElement&&document.activeElement.matches&&document.activeElement.matches("input,textarea")))go("inicio");hiddenAt=0});
 try{history.replaceState({guard:1},"",location.pathname+location.search)}catch(e){try{history.replaceState({guard:1},"")}catch(x){}}hpush();
 try{const lv=JSON.parse(localStorage.getItem("painel-mi-live")||"null");if(lv&&lv.date===TODAY())ui.live=lv;else localStorage.removeItem("painel-mi-live")}catch(e){}
 window.__acct=acct;
